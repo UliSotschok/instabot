@@ -18,7 +18,7 @@ func (bot *MyInstabot) login() error {
 // reloadSession will attempt to recover a previous session
 func (bot *MyInstabot) reloadSession() error {
 
-	insta, err := goinsta.Import("./goinsta-session")
+	insta, err := goinsta.Import("config/goinsta-session")
 	if err != nil {
 		return errors.New("Couldn't recover the session")
 	}

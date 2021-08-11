@@ -36,7 +36,6 @@ func setupLogging() {
 
 // Retries the same function [function], a certain number of times (maxAttempts).
 // It is exponential : the 1st time it will be (sleep), the 2nd time, (sleep) x 2, the 3rd time, (sleep) x 3, etc.
-// If this function fails to recover after an error, it will send an email to the address in the config file.
 func retry(maxAttempts int, sleep time.Duration, function func() error) (err error) {
 	for currentAttempt := 0; currentAttempt < maxAttempts; currentAttempt++ {
 		err = function()
