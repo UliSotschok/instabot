@@ -1,0 +1,39 @@
+{
+  "hashtag_configs": [
+    {
+      "hashtag": "dog",
+      "min_followers": 5,
+      "max_followers": 200,
+      "comments": [
+        "😍😍😍",
+        "😻😻😻",
+        "wow nice pic",
+        "Lovely 😍",
+        "Wonderful 😍😍👏👏"
+      ],
+      "weight_to_choose": 1
+    },
+    {
+      "hashtag": "cat",
+      "min_followers": 5,
+      "max_followers": 200,
+      "comments": [
+        "😍😍😍",
+        "😻😻😻",
+        "Miauu"
+      ],
+      "weight_to_choose": 2
+    }
+  ],
+  "user_blacklist": [],
+  "user_whitelist": [],
+  "scheduling": {
+    "pause_after_action_in_s": 30,
+    "batch_size": 20,
+    "pause_after_batch_in_m": 360
+  },
+  "authentication": {
+    "username": "YOUR_USERNAME",
+    "password": "YOUR_PASSWORD"
+  }
+}

@@ -2,7 +2,6 @@ package bot
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"math/rand"
 	"reflect"
@@ -30,6 +29,8 @@ type actionLog struct {
 }
 
 func RunBots() {
+	setupLogging()
+
 	var bot MyInstabot
 
 	// Gets the command line options
@@ -49,66 +50,16 @@ func RunBots() {
 		return
 	}
 
-	if unfollow {
-		bot.syncFollowers()
-	} else if run {
-		// Loop through tags ; follows, likes, and comments, according to the config file
-		bot.mainLoop()
-	}
+	bot.syncFollowers()
+	bot.mainLoop()
 }
 
 func (bot *MyInstabot) syncFollowers() {
 	following := bot.instaApi.Account.Following()
-	followers := bot.instaApi.Account.Followers()
-
-	var followerUsers []goinsta.User
-	var followingUsers []goinsta.User
 
 	for following.Next() {
 		for _, user := range following.Users {
-			followingUsers = append(followingUsers, user)
 			bot.followingCache = append(bot.followingCache, user.Username)
-		}
-	}
-	for followers.Next() {
-		for _, user := range followers.Users {
-			followerUsers = append(followerUsers, user)
-		}
-	}
-
-	var users []goinsta.User
-	for _, user := range followingUsers {
-		// Skip whitelisted users.
-		if containsString(bot.config.UserWhitelist, user.Username) {
-			continue
-		}
-
-		if !containsUser(followerUsers, user) {
-			users = append(users, user)
-		}
-	}
-	if len(users) == 0 {
-		return
-	}
-	fmt.Printf("\n%d users are not following you back!\n", len(users))
-
-	answerUnfollowAll := getInput("Unfollow everyone[A] or decide for each user[R]?")
-
-	for _, user := range users {
-		if answerUnfollowAll == "R" {
-			answerUserUnfollow := getInputf("Unfollow %s ? [yN]", user.Username)
-			if answerUserUnfollow == "y" {
-				bot.config.UserBlacklist = append(bot.config.UserBlacklist, user.Username)
-				if !dev {
-					err := user.Unfollow()
-					if err != nil {
-						log.Printf("Error unfollowing user. error='%s'\n", err.Error())
-					}
-				}
-				doPauseAfterAction(bot.config.Scheduling)
-			} else {
-				bot.config.UserWhitelist = append(bot.config.UserWhitelist, user.Username)
-			}
 		}
 	}
 }
