@@ -105,9 +105,13 @@ func containsString(slice []string, user string) bool {
 }
 
 func doPauseAfterAction(config scheduling) {
-	time.Sleep(time.Duration(rand.Intn(config.PauseAfterBatchInM)+config.PauseAfterBatchInM) * time.Second)
+	duration := time.Duration(rand.Intn(config.PauseAfterActionInS)+config.PauseAfterActionInS) * time.Second
+	log.Printf("Sleeping for: %v\n", duration)
+	time.Sleep(duration)
 }
 
 func doPauseAfterBatch(config scheduling) {
-	time.Sleep(time.Duration(rand.Intn(config.PauseAfterBatchInM)+config.PauseAfterBatchInM) * time.Minute)
+	duration := time.Duration(rand.Intn(config.PauseAfterBatchInM)+config.PauseAfterBatchInM) * time.Minute
+	log.Printf("Sleeping for: %v\n", duration)
+	time.Sleep(duration)
 }

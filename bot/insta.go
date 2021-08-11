@@ -179,6 +179,11 @@ func (bot *MyInstabot) findImage(conf hashtagConfig) (goinsta.Item, *goinsta.Use
 			continue
 		}
 
+		// skip blacklisted users
+		if containsString(bot.config.UserBlacklist, user.Username) {
+			continue
+		}
+
 		return img, user, nil // we found an image and did our action(s)
 	}
 	log.Printf("Warning: No fitting image found for hashtag='%s'\n", conf.Hashtag)
