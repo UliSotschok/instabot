@@ -4,6 +4,8 @@
 *.so
 *.dylib
 
+bin/
+
 # Local files
 local/
 key
