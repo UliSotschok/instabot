@@ -37,7 +37,7 @@ func (bot *MyInstabot) createAndSaveSession() error {
 	bot.instaApi = goinsta.New(bot.config.Authentication.Username, bot.config.Authentication.Password)
 	err := bot.instaApi.Login()
 	if err != nil {
-		log.Println("Login failed. Check password and username")
+		log.Printf("msg='Login failed' err=%v\n", err)
 		return err
 	}
 
