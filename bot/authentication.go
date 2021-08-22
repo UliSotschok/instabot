@@ -2,7 +2,7 @@ package bot
 
 import (
 	"errors"
-	"github.com/ahmdrz/goinsta/v2"
+	"github.com/Davincible/goinsta"
 	"log"
 )
 

@@ -8,7 +8,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/ahmdrz/goinsta/v2"
+	"github.com/Davincible/goinsta"
 	wr "github.com/mroth/weightedrand"
 )
 
@@ -82,7 +82,7 @@ func (bot *MyInstabot) mainLoop() {
 }
 
 func (bot *MyInstabot) pickRandomTag() hashtagConfig {
-	// TODO: cache chooser?
+	// TODO: cache chooser?"github.com/ahmdrz/goinsta/v2"
 	choices := make([]wr.Choice, len(bot.config.HashtagConfigs))
 	for i, elem := range bot.config.HashtagConfigs {
 		choices[i] = wr.NewChoice(elem, elem.WeightToChoose)
@@ -91,9 +91,9 @@ func (bot *MyInstabot) pickRandomTag() hashtagConfig {
 	return chooser.Pick().(hashtagConfig)
 }
 
-func (bot *MyInstabot) findImage(conf hashtagConfig) (goinsta.Item, *goinsta.User, error) {
+func (bot *MyInstabot) findImage(conf hashtagConfig) (*goinsta.Item, *goinsta.User, error) {
 	log.Printf("Fetching the list of images for #%s\n", conf.Hashtag)
-	var img goinsta.Item
+	var img *goinsta.Item
 	var user *goinsta.User
 
 	var images *goinsta.FeedTag
@@ -105,7 +105,7 @@ func (bot *MyInstabot) findImage(conf hashtagConfig) (goinsta.Item, *goinsta.Use
 		return img, user, err
 	}
 
-	for _, image := range images.Images {
+	for _, image := range images.Items {
 		// skip own images
 		if image.User.Username == bot.config.Authentication.Username {
 			continue
@@ -150,13 +150,13 @@ func (bot MyInstabot) checkIfFollowing(user *goinsta.User) bool {
 	return false
 }
 
-func (bot *MyInstabot) executeActions(image goinsta.Item, user *goinsta.User, conf hashtagConfig) {
+func (bot *MyInstabot) executeActions(image *goinsta.Item, user *goinsta.User, conf hashtagConfig) {
 	bot.executeAction(like, image, user, conf)
 	bot.executeAction(comment, image, user, conf)
 	bot.executeAction(follow, image, user, conf)
 }
 
-func (bot *MyInstabot) executeAction(actionType ActionType, image goinsta.Item, user *goinsta.User, conf hashtagConfig) {
+func (bot *MyInstabot) executeAction(actionType ActionType, image *goinsta.Item, user *goinsta.User, conf hashtagConfig) {
 	switch actionType {
 	case like:
 		bot.likeImage(image)
@@ -175,7 +175,7 @@ func (bot *MyInstabot) executeAction(actionType ActionType, image goinsta.Item, 
 }
 
 // Likes an image, if not liked already
-func (bot *MyInstabot) likeImage(image goinsta.Item) {
+func (bot *MyInstabot) likeImage(image *goinsta.Item) {
 	log.Println("Liking the picture")
 	if !image.HasLiked {
 		if !dev {
@@ -192,7 +192,7 @@ func (bot *MyInstabot) likeImage(image goinsta.Item) {
 }
 
 // Comments an image
-func (bot *MyInstabot) commentImage(comments []string, image goinsta.Item) {
+func (bot *MyInstabot) commentImage(comments []string, image *goinsta.Item) {
 	rand.Seed(time.Now().Unix())
 	text := comments[rand.Intn(len(comments))]
 	if !dev {
@@ -226,10 +226,10 @@ func (bot *MyInstabot) commentImage(comments []string, image goinsta.Item) {
 // Follows a user, if not following already
 func (bot *MyInstabot) followUser(user *goinsta.User) {
 	log.Printf("Following %s\n", user.Username)
-	err := user.FriendShip()
+	friendship, err := user.GetFriendship()
 	check(err)
 	// If not following already
-	if !user.Friendship.Following {
+	if !friendship.Following {
 		if !dev {
 			err = user.Follow()
 			if err != nil {

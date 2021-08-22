@@ -1,4 +1,4 @@
-github.com/ahmdrz/goinsta/v2 v2.4.5 h1:yiNEpTNEx/VWlcCq93miWUx6d2uxdEyklwljsZaiD5I=
-github.com/ahmdrz/goinsta/v2 v2.4.5/go.mod h1:XUEELCWd3hVSqADejqxTa8Uc7Yto9cb6a6HrfkGwVf8=
+github.com/Davincible/goinsta v0.0.0-20210821150128-4a6652d53813 h1:5x0TuBhrEeSqR7XWS8KG3SsLoyGWVedljFXaUb+UEFY=
+github.com/Davincible/goinsta v0.0.0-20210821150128-4a6652d53813/go.mod h1:iqzuEWW2jKF3PK6jaGG+xYNNc/ia5jJD1Hk01tVYTpA=
 github.com/mroth/weightedrand v0.4.1 h1:rHcbUBopmi/3x4nnrvwGJBhX9d0vk+KgoLUZeDP6YyI=
 github.com/mroth/weightedrand v0.4.1/go.mod h1:3p2SIcC8al1YMzGhAIoXD+r9olo/g/cdJgAD905gyNE=
