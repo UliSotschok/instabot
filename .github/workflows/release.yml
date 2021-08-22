@@ -1,0 +1,33 @@
+name: Go
+
+on: 
+  push:
+    tags:
+      - 'v.*'
+
+jobs:
+  releases-matrix:
+    name: Release Go Binary
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # build and publish in parallel: linux/386, linux/amd64, windows/386, windows/amd64, darwin/amd64 
+        goos: [linux, windows, darwin]
+        goarch: ["386", amd64]
+        exclude:  
+          - goarch: "386"
+            goos: darwin 
+    steps:
+    - name: Get tag
+      id: git_tag
+      uses: dawidd6/action-get-tag@v1
+    - uses: actions/checkout@v2
+    - uses: wangyoucao577/go-release-action@v1.19
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: ${{ matrix.goos }}
+        goarch: ${{ matrix.goarch }}
+        goversion: "https://golang.org/dl/go1.17.linux-amd64.tar.gz"
+        binary_name: "instabot"
+        release_tag: ${{steps.git_tag.outputs.tag}}
+        extra_files: LICENSE README.md
