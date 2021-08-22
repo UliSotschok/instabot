@@ -36,10 +36,9 @@ func (bot *MyInstabot) reloadSession() error {
 func (bot *MyInstabot) createAndSaveSession() error {
 	bot.instaApi = goinsta.New(bot.config.Authentication.Username, bot.config.Authentication.Password)
 	err := bot.instaApi.Login()
-	// TODO: really bad workaround. But the script also works when this error occurs
-	if err != nil && err.Error() != "Failed to fetch initial messages inbox snapshot: No more posts availible, page end has been reached" {
-		log.Printf("msg='Login failed' err=%v\n", err)
-		return err
+	if err != nil {
+		log.Printf("msg='Login propapbly failed. (Error will be ignored)' err=%v\n", err)
+		//return err	// TODO: really bad workaround. But the script also works when some errors are ignored
 	}
 
 	err = bot.instaApi.Export("config/goinsta-session")
