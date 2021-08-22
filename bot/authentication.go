@@ -2,7 +2,7 @@ package bot
 
 import (
 	"errors"
-	"github.com/Davincible/goinsta"
+	"github.com/UliSotschok/goinsta"
 	"log"
 )
 
@@ -20,6 +20,7 @@ func (bot *MyInstabot) reloadSession() error {
 
 	insta, err := goinsta.Import("config/goinsta-session")
 	if err != nil {
+		log.Printf("msg='session recovery failed' err='%v'\n", err)
 		return errors.New("Couldn't recover the session")
 	}
 
@@ -36,9 +37,8 @@ func (bot *MyInstabot) reloadSession() error {
 func (bot *MyInstabot) createAndSaveSession() error {
 	bot.instaApi = goinsta.New(bot.config.Authentication.Username, bot.config.Authentication.Password)
 	err := bot.instaApi.Login()
-	// TODO: really bad workaround. But the script also works when this error occurs
-	if err != nil && err.Error() != "Failed to fetch initial messages inbox snapshot: No more posts availible, page end has been reached" {
-		log.Printf("msg='Login failed' err=%v\n", err)
+	if err != nil {
+		log.Printf("msg='Login failed.' err=%v\n", err)
 		return err
 	}
 

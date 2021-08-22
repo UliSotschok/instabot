@@ -2,14 +2,11 @@ package bot
 
 import (
 	"errors"
+	"github.com/UliSotschok/goinsta"
+	wr "github.com/mroth/weightedrand"
 	"log"
 	"math/rand"
-	"reflect"
 	"time"
-	"unsafe"
-
-	"github.com/Davincible/goinsta"
-	wr "github.com/mroth/weightedrand"
 )
 
 // MyInstabot is a wrapper around everything
@@ -82,7 +79,7 @@ func (bot *MyInstabot) mainLoop() {
 }
 
 func (bot *MyInstabot) pickRandomTag() hashtagConfig {
-	// TODO: cache chooser?"github.com/ahmdrz/goinsta/v2"
+	// TODO: cache chooser?
 	choices := make([]wr.Choice, len(bot.config.HashtagConfigs))
 	for i, elem := range bot.config.HashtagConfigs {
 		choices[i] = wr.NewChoice(elem, elem.WeightToChoose)
@@ -196,24 +193,7 @@ func (bot *MyInstabot) commentImage(comments []string, image *goinsta.Item) {
 	rand.Seed(time.Now().Unix())
 	text := comments[rand.Intn(len(comments))]
 	if !dev {
-		var err error = nil
-		comments := image.Comments
-		if comments == nil {
-			// monkey patching
-			// we need to do that because https://github.com/ahmdrz/goinsta/pull/299 is not in goinsta/v2
-			// I know, it's ugly
-			newComments := goinsta.Comments{}
-			rs := reflect.ValueOf(&newComments).Elem()
-			rf := rs.FieldByName("item")
-			rf = reflect.NewAt(rf.Type(), unsafe.Pointer(rf.UnsafeAddr())).Elem()
-			item := reflect.New(reflect.TypeOf(image))
-			item.Elem().Set(reflect.ValueOf(image))
-			rf.Set(item)
-			err = newComments.Add(text)
-			// end hack!
-		} else {
-			err = comments.Add(text)
-		}
+		err := image.Comment(text)
 		if err != nil {
 			log.Printf("Error commenting image: error='%v'\n", err)
 		} else {
